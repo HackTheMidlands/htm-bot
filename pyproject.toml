@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "htm-bot"
+version = "0.1.0"
+description = ""
+authors = ["Charles de Freitas <me@chasbob.dev>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+"discord.py" = "^1.7.3"
+typer = "^0.4.0"
+discord-py-interactions = "^3.0.2"
+discord-py-slash-command = "^3.0.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+jedi = "^0.18.0"
+pylint = "^2.11.1"
+black = "^21.9b0"
+pynvim = "^0.4.3"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+htm-bot = "htm_bot.main:app"
