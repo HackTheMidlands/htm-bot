@@ -3,6 +3,8 @@
 
 from discord import Embed
 import discord
+import typer
+import requests
 from discord.ext import commands
 from discord.ext.commands import Bot, Cog
 from discord_slash import cog_ext, SlashContext
@@ -17,25 +19,25 @@ class Slash(Cog):
         await ctx.send(embed=embed)
 
 class Greetings(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: Bot, typerCtx: typer.Context):
         self.bot = bot
-        self._last_member = None
+        self.typerCtx = typerCtx
 
-    @commands.Cog.listener()
-    async def on_member_join(self, member):
-        channel = member.guild.system_channel
-        if channel is not None:
-            await channel.send('Welcome {0.mention}.'.format(member))
+
+    @commands.command()
+    async def post(self, ctx, *, member: discord.Member = None):
+        """Post to API"""
+        member = member or ctx.author
+        url = self.typerCtx.obj['api_url']
+        token = self.typerCtx.obj['api_token']
+        requests.post(f'{url}?token={token}', data={'user': str(member)})
+
 
     @commands.command()
     async def hello(self, ctx, *, member: discord.Member = None):
         """Says hello"""
         member = member or ctx.author
-        if self._last_member is None or self._last_member.id != member.id:
-            await ctx.send('Hello {0.name}~'.format(member))
-        else:
-            await ctx.send('Hello {0.name}... This feels familiar.'.format(member))
-        self._last_member = member
+        await ctx.send('Hello {0.name}... This feels familiar.'.format(member))
 
 def setup(bot: Bot):
     bot.add_cog(Slash(bot))

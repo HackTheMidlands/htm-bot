@@ -9,6 +9,15 @@ app = typer.Typer()
 
 
 @app.command()
-def run(token: str = typer.Argument(default="", envvar="DISCORD_TOKEN")):
-    setup(bot)
+def run(
+    ctx: typer.Context,
+    token: str = typer.Argument(default="", envvar="DISCORD_TOKEN"),
+    api_url: str = typer.Argument(default = "https://achivements.hackthemidlands.com/api", envvar="API_BASE"),
+    api_token: str = typer.Argument(default="", envvar="API_TOKEN")
+):
+    ctx.obj = {
+        "api_url": api_url,
+        "api_token": api_token
+    }
+    setup(bot, ctx)
     bot.run(token)
