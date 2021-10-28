@@ -8,4 +8,4 @@ services:
     environment:
       DISCORD_TOKEN:
       API_TOKEN:
-      API_URL:
+      API_BASE:
