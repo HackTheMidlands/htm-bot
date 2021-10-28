@@ -11,38 +11,35 @@ from discord_slash import SlashContext, cog_ext
 
 
 class Slash(Cog):
-    def __init__(self, bot: Bot):
+    typerCtx: typer.Context
+    bot: Bot
+    url: str
+    token: str
+
+    def __init__(self, bot: Bot, typer_ctx: typer.Context):
         self.bot = bot
+        self.typerCtx = typer_ctx
+        self.url = typer_ctx.obj["api_url"]
+        self.token = typer_ctx.obj["api_token"]
 
-    @cog_ext.cog_slash(name="test")
-    async def _test(self, ctx: SlashContext):
-        embed = Embed(title="Embed Test")
-        await ctx.send(embed=embed)
+    @cog_ext.cog_slash(name="ping", guild_ids=[724630949521784852])
+    async def _ping(self, ctx: SlashContext):
+        await ctx.send(content="Pong!")
 
-
-class Greetings(commands.Cog):
-    def __init__(self, bot: Bot, typerCtx: typer.Context):
-        self.bot = bot
-        self.typerCtx = typerCtx
-
-    @commands.command()
-    async def post(self, ctx, *, member: discord.Member = None):
-        """Post to API"""
-        member = member or ctx.author
-        url = self.typerCtx.obj["api_url"]
-        token = self.typerCtx.obj["api_token"]
-        typer.echo(f'POST: {url}/{member}')
-        resp = requests.post(f"{url}/{member}?token={token}")
-        typer.echo(resp)
-        await ctx.send("You have been posted!")
-
-    @commands.command()
-    async def hello(self, ctx, *, member: discord.Member = None):
-        """Says hello"""
-        member = member or ctx.author
-        await ctx.send(f"Hello {member.name}...")
+    @cog_ext.cog_slash(name="shark", guild_ids=[724630949521784852])
+    async def _shark_tank(self, ctx: SlashContext):
+        member_id = ctx.author_id
+        member = ctx.author
+        typer.echo(f"POST {member}: {self.url}/{member_id}")
+        try:
+            resp = requests.post(f"{self.url}/{member_id}?token={self.token}")
+            typer.echo(resp)
+        except Exception as e:
+            typer.echo(e, err=True)
+            await ctx.send("Oops! something went wrong.")
+            return
+        await ctx.send("Well done!")
 
 
 def setup(bot: Bot, ctx: typer.Context):
-    bot.add_cog(Slash(bot))
-    bot.add_cog(Greetings(bot, ctx))
+    bot.add_cog(Slash(bot, ctx))

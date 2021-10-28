@@ -22,4 +22,3 @@ async def on_ready():
 @bot.event
 async def on_disconnect():
     typer.echo("disconnecting")
-    await session.close()
