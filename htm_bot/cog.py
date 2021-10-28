@@ -41,6 +41,6 @@ class Greetings(commands.Cog):
         await ctx.send(f"Hello {member.name}...")
 
 
-def setup(bot: Bot):
+def setup(bot: Bot, ctx: typer.Context):
     bot.add_cog(Slash(bot))
-    bot.add_cog(Greetings(bot))
+    bot.add_cog(Greetings(bot, ctx))
