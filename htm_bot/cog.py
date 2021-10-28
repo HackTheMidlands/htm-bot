@@ -31,7 +31,9 @@ class Greetings(commands.Cog):
         member = member or ctx.author
         url = self.typerCtx.obj["api_url"]
         token = self.typerCtx.obj["api_token"]
-        requests.post(f"{url}/{member}?token={token}")
+        typer.echo(f'POST: {url}/{member}')
+        resp = requests.post(f"{url}/{member}?token={token}")
+        typer.echo(resp)
         await ctx.send("You have been posted!")
 
     @commands.command()
