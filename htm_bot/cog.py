@@ -10,7 +10,16 @@ from discord.ext.commands import Bot, Cog
 from discord_slash import SlashContext, cog_ext
 
 
-class Slash(Cog):
+class PingPongCog(Cog):
+    def __init__(self, bot: Bot):
+        self.bot = bot
+
+    @cog_ext.cog_slash(name="ping", guild_ids=[724630949521784852])
+    async def _ping(self, ctx: SlashContext):
+        await ctx.send(content="Pong!")
+
+
+class SharkCog(Cog):
     typerCtx: typer.Context
     bot: Bot
     url: str
@@ -21,10 +30,6 @@ class Slash(Cog):
         self.typerCtx = typer_ctx
         self.url = typer_ctx.obj["api_url"]
         self.token = typer_ctx.obj["api_token"]
-
-    @cog_ext.cog_slash(name="ping", guild_ids=[724630949521784852])
-    async def _ping(self, ctx: SlashContext):
-        await ctx.send(content="Pong!")
 
     @cog_ext.cog_slash(name="shark", guild_ids=[724630949521784852])
     async def _shark_tank(self, ctx: SlashContext):
@@ -42,4 +47,5 @@ class Slash(Cog):
 
 
 def setup(bot: Bot, ctx: typer.Context):
-    bot.add_cog(Slash(bot, ctx))
+    bot.add_cog(SharkCog(bot, ctx))
+    bot.add_cog(PingPongCog(bot))
