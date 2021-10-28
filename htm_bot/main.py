@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import re
+
 import typer
 
 from .bot import bot
@@ -19,5 +21,6 @@ def run(
     api_token: str = typer.Argument(default="", envvar="API_TOKEN"),
 ):
     ctx.obj = {"api_url": api_url, "api_token": api_token}
+    typer.echo(f'Using API endpoint: {api_url}, token: {re.sub(".", "*", api_token)}')
     setup(bot, ctx)
     bot.run(token)
