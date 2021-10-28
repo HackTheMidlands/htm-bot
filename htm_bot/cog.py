@@ -31,13 +31,14 @@ class Greetings(commands.Cog):
         member = member or ctx.author
         url = self.typerCtx.obj["api_url"]
         token = self.typerCtx.obj["api_token"]
-        requests.post(f"{url}?token={token}", data={"user": str(member)})
+        requests.post(f"{url}/{member}?token={token}")
+        await ctx.send("You have been posted!")
 
     @commands.command()
     async def hello(self, ctx, *, member: discord.Member = None):
         """Says hello"""
         member = member or ctx.author
-        await ctx.send("Hello {0.name}... This feels familiar.".format(member))
+        await ctx.send(f"Hello {member.name}...")
 
 
 def setup(bot: Bot):
