@@ -67,21 +67,12 @@ class SharkCog(Cog):
             typer.echo(e, err=True)
             await ctx.send("Oops! Something went wrong.")
             return
-        await ctx.send("Successfully submitted {name}!")
+        await ctx.send(f"Successfully submitted {name}!")
 
     @cog_ext.cog_slash(name="shark", guild_ids=[724630949521784852])
     async def _shark_tank(self, ctx: SlashContext):
         member_id = ctx.author_id
-        member = ctx.author
-        typer.echo(f"POST {member}: {self.url}/{member_id}")
-        try:
-            resp = requests.post(f"{self.url}/{member_id}?token={self.token}")
-            typer.echo(resp)
-        except Exception as e:
-            typer.echo(e, err=True)
-            await ctx.send("Oops! something went wrong.")
-            return
-        await ctx.send("Well done!")
+        await self._submit(ctx, "SharkTank", member_id)
 
 
 def setup(bot: Bot, ctx: typer.Context):
